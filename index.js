@@ -148,6 +148,16 @@ const loadImg = (img) => {
 
   imgHolder.src = `./assets/${img}`;
   imgHolder.alt = img;
+
+  animateSlide(imgHolder);
+};
+
+const animateSlide = (imgHolder) => {
+  imgHolder.classList.add("animate-img-holder");
+
+  setTimeout(() => {
+    imgHolder.classList.remove("animate-img-holder");
+  }, 500);
 };
 
 const setupSliderBtns = (imgSliderObj) => {

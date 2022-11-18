@@ -589,14 +589,14 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .slider-container {
-  width: min(850px, 100%);
+  width: min(950px, 100%);
   height: max-content;
   position: relative;
 }
 
 .img-holder {
   width: 100%;
-  max-height: 550px;
+  height: 285px;
 }
 
 .slider-btn {
@@ -683,4 +683,38 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 1.8rem;
   text-decoration: none;
   transform: rotate(90deg);
+}
+
+.animate-img-holder {
+  animation: unblur 1s forwards;
+}
+
+@keyframes unblur {
+  0% {
+    filter: blur(4px);
+    opacity: 0;
+  }
+
+  75%, 100% {
+    filter: none;
+    opacity: 1;
+  }
+}
+
+@media (min-width: 600px) {
+  .img-holder {
+    height: 350px;
+  }
+}
+
+@media (min-width: 750px) {
+  .img-holder {
+    height: 450px;
+  }
+}
+
+@media (min-width: 950px) {
+  .img-holder {
+    height: 550px;
+  }
 }
