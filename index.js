@@ -7,21 +7,16 @@ const setupMainMenuBtns = () => {
     btn.addEventListener("pointerdown", (e) => {
       e.stopPropagation();
 
-      const nextElementSibling = e.target.nextElementSibling;
+      clearSelected();
 
-      if (
-        nextElementSibling &&
-        nextElementSibling.classList.contains("appear-translate-y")
-      ) {
-        nextElementSibling.classList.toggle("appear-translate-y");
-        return;
-      }
+      const target = e.target;
 
-      clearSubMenus();
+      if (target.classList.contains("selected")) {
+        target.classList.toggle("selected");
+      } else {
+        mainMenuBtns.forEach((btn) => btn.classList.remove("selected"));
 
-      if (nextElementSibling) {
-        nextElementSibling.classList.add("appear-translate-y");
-        return;
+        target.classList.add("selected");
       }
     });
   });
@@ -29,42 +24,49 @@ const setupMainMenuBtns = () => {
 
 const setupSubMenu1Btns = () => {
   const subMenu1Btns = document.querySelectorAll(".section-2 .sub-menu-1-btn");
-  const subMenu2 = document.querySelectorAll(".section-2 .sub-menu-2");
 
   subMenu1Btns.forEach((btn) => {
     btn.addEventListener("pointerdown", (e) => {
       e.stopPropagation();
 
-      const nextElementSibling = e.target.nextElementSibling;
+      const target = e.target;
 
-      if (
-        nextElementSibling &&
-        nextElementSibling.classList.contains("appear-translate-x")
-      ) {
-        nextElementSibling.classList.toggle("appear-translate-x");
-        return;
-      }
+      if (target.classList.contains("selected")) {
+        target.classList.toggle("selected");
+      } else {
+        subMenu1Btns.forEach((btn) => btn.classList.remove("selected"));
 
-      subMenu2.forEach((e) => e.classList.remove("appear-translate-x"));
-
-      if (nextElementSibling) {
-        nextElementSibling.classList.add("appear-translate-x");
-        return;
+        target.classList.add("selected");
       }
     });
   });
 };
 
-const clearSubMenus = () => {
-  const subMenu1 = document.querySelectorAll(".section-2 .sub-menu-1");
-  const subMenu2 = document.querySelectorAll(".section-2 .sub-menu-2");
+const setupSubMenu2Btns = () => {
+  const subMenu2Btns = document.querySelectorAll(".section-2 .sub-menu-2-btn");
 
-  subMenu1.forEach((e) => e.classList.remove("appear-translate-y"));
-  subMenu2.forEach((e) => e.classList.remove("appear-translate-x"));
+  subMenu2Btns.forEach((btn) => {
+    btn.addEventListener("pointerdown", (e) => {
+      e.stopPropagation();
+
+      clearSelected();
+    });
+  });
+};
+
+const clearSelected = () => {
+  const mainMenuBtns = document.querySelectorAll(".section-2 .main-menu-btn");
+  const subMenu1Btns = document.querySelectorAll(".section-2 .sub-menu-1-btn");
+  const subMenu2Btns = document.querySelectorAll(".section-2 .sub-menu-2-btn");
+
+  [...mainMenuBtns, ...subMenu1Btns, ...subMenu2Btns].forEach((e) =>
+    e.classList.remove("selected")
+  );
 };
 
 setupMainMenuBtns();
 setupSubMenu1Btns();
+setupSubMenu2Btns();
 
 // Section 3
 // Responsive mobile menu
@@ -78,10 +80,12 @@ const setupHamburgerIcon = () => {
     e.stopPropagation();
 
     nav3.classList.toggle("expand");
+
     mainMenuBtns.forEach((e) => {
       e.classList.toggle("appear");
       e.classList.remove("selected");
     });
+
     hamburgerDivs.forEach((e) => e.classList.toggle("hamburger-transform"));
   });
 };
@@ -96,7 +100,7 @@ const setupMainMenuBtns_2 = () => {
       if (e.target.classList.contains("selected")) {
         e.target.classList.toggle("selected");
       } else {
-        clearBgColor();
+        clearSelected_2();
         e.target.classList.add("selected");
       }
     });
@@ -110,6 +114,11 @@ const setupSubMenu1Btns_2 = () => {
     btn.addEventListener("pointerdown", (e) => {
       e.stopPropagation();
 
+      if (window.innerWidth >= 650) {
+        clearSelected_2();
+        return;
+      }
+
       subMenu1Btns.forEach((btn) => btn.classList.remove("selected"));
 
       e.target.classList.add("selected");
@@ -117,18 +126,33 @@ const setupSubMenu1Btns_2 = () => {
   });
 };
 
-const clearBgColor = () => {
+const clearSelected_2 = () => {
   const mainMenuBtns = document.querySelectorAll(".section-3 .main-menu-btn");
   const subMenu1Btns = document.querySelectorAll(".section-3 .sub-menu-1-btn");
 
-  mainMenuBtns.forEach((btn) => btn.classList.remove("selected"));
-  subMenu1Btns.forEach((btn) => btn.classList.remove("selected"));
+  [...mainMenuBtns, ...subMenu1Btns].forEach((btn) =>
+    btn.classList.remove("selected")
+  );
 };
 
-const clearMainMenuBtns = () => {
-  const mainMenuBtns = document.querySelectorAll(".section-3 .main-menu-btn");
+const handleResize = () => {
+  const mainMenuBtns = Array.from(
+    document.querySelectorAll(".section-3 .main-menu-btn")
+  );
+  const nav3 = document.querySelector(".nav-3");
+  const hamburgerDivs = document.querySelectorAll(".hamburger-div");
 
-  mainMenuBtns.forEach((e) => e.classList.remove("selected"));
+  if (window.innerWidth < 650) {
+    if (mainMenuBtns.some((btn) => btn.classList.contains("selected"))) {
+      nav3.classList.add("expand");
+
+      mainMenuBtns.forEach((e) => {
+        e.classList.add("appear");
+      });
+
+      hamburgerDivs.forEach((e) => e.classList.add("hamburger-transform"));
+    }
+  }
 };
 
 setupHamburgerIcon();
@@ -250,7 +274,9 @@ const imgSliderObj = {
 setupImgSlider(imgSliderObj);
 setInterval(() => goToNextSlide(imgSliderObj), 5000);
 
-window.onpointerdown = () => {
-  clearSubMenus();
-  clearMainMenuBtns();
+onpointerdown = () => {
+  clearSelected();
+  clearSelected_2();
 };
+
+onresize = handleResize;
